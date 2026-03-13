@@ -14,18 +14,22 @@ export default defineConfig({
       manifest: {
         name: 'GemDeck',
         short_name: 'GemDeck',
-        description: 'Gem専用PWAランチャー',
-        theme_color: '#ffffff',
+        description: 'Gemini Custom GEMS Manager',
+        theme_color: '#4f46e5',
+        background_color: '#f8fafc',
+        display: 'standalone',
         icons: [
           {
             src: 'pwa-192x192.png',
             sizes: '192x192',
-            type: 'image/png'
+            type: 'image/png',
+            purpose: 'any'
           },
           {
             src: 'pwa-512x512.png',
             sizes: '512x512',
-            type: 'image/png'
+            type: 'image/png',
+            purpose: 'maskable'
           }
         ]
       }
