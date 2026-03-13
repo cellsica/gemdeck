@@ -69,10 +69,7 @@ export const useGemStore = defineStore('gem', () => {
   }
 
   const deleteGem = (id: string) => {
-    const index = gems.value.findIndex(g => g.id === id)
-    if (index !== -1) {
-      gems.value.splice(index, 1)
-    }
+    gems.value = gems.value.filter(g => g.id !== id)
   }
 
   const touchGem = (id: string) => {
