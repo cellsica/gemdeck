@@ -96,6 +96,10 @@ export const useGemStore = defineStore('gem', () => {
     return false
   }
 
+  const clearAllGems = () => {
+    gems.value = []
+  }
+
   return {
     gems,
     sortBy,
@@ -106,6 +110,7 @@ export const useGemStore = defineStore('gem', () => {
     touchGem,
     togglePin,
     exportGems,
-    importGems
+    importGems,
+    clearAllGems
   }
 })

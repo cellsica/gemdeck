@@ -1,7 +1,6 @@
-<script setup lang="ts">
 import { ref } from 'vue'
 import { useGemStore } from '../stores/gemStore'
-import { X, Download, Upload, ShieldCheck, AlertCircle } from 'lucide-vue-next'
+import { X, Download, Upload, ShieldCheck, AlertCircle, Trash2 } from 'lucide-vue-next'
 
 const props = defineProps<{
   isOpen: boolean
@@ -51,6 +50,13 @@ const handleImport = (event: Event) => {
   }
   reader.readAsText(file)
 }
+
+const handleReset = () => {
+  if (window.confirm('本当に全てのデータを消去してもいいのか？バックアップは取ったか？')) {
+    gemStore.clearAllGems()
+    emit('close')
+  }
+}
 </script>
 
 <template>
@@ -68,25 +74,25 @@ const handleImport = (event: Event) => {
         </button>
       </div>
 
-      <div class="p-6 space-y-6">
+      <div class="p-6 space-y-8">
         <!-- バックアップ/復元 -->
         <section>
-          <h3 class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-3">データの管理とポータビリティ</h3>
+          <h3 class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-4">Data Management</h3>
           <div class="grid grid-cols-2 gap-4">
             <button 
               @click="handleExport"
-              class="flex flex-col items-center justify-center gap-2 p-4 border-2 border-dashed border-slate-200 dark:border-slate-700 rounded-xl hover:border-indigo-500 hover:bg-indigo-50/50 dark:hover:bg-indigo-950/20 transition-all group"
+              class="flex flex-col items-center justify-center gap-2 p-4 border border-slate-200 dark:border-slate-800 rounded-2xl hover:border-indigo-500 hover:bg-indigo-50/50 dark:hover:bg-indigo-950/20 transition-all group"
             >
               <Download class="w-6 h-6 text-slate-400 group-hover:text-indigo-500 transition-colors" />
-              <span class="text-sm font-bold text-slate-600 dark:text-slate-300">エクスポート</span>
+              <span class="text-[11px] font-bold text-slate-600 dark:text-slate-300">Export JSON</span>
             </button>
 
             <button 
               @click="triggerFileInput"
-              class="flex flex-col items-center justify-center gap-2 p-4 border-2 border-dashed border-slate-200 dark:border-slate-700 rounded-xl hover:border-indigo-500 hover:bg-indigo-50/50 dark:hover:bg-indigo-950/20 transition-all group"
+              class="flex flex-col items-center justify-center gap-2 p-4 border border-slate-200 dark:border-slate-800 rounded-2xl hover:border-indigo-500 hover:bg-indigo-50/50 dark:hover:bg-indigo-950/20 transition-all group"
             >
               <Upload class="w-6 h-6 text-slate-400 group-hover:text-indigo-500 transition-colors" />
-              <span class="text-sm font-bold text-slate-600 dark:text-slate-300">インポート</span>
+              <span class="text-[11px] font-bold text-slate-600 dark:text-slate-300">Import JSON</span>
             </button>
           </div>
           <input 
@@ -98,8 +104,23 @@ const handleImport = (event: Event) => {
           />
         </section>
 
+        <!-- 危険地帯 -->
+        <section class="pt-6 border-t border-slate-100 dark:border-slate-800">
+          <h3 class="text-[10px] font-bold text-rose-500 uppercase tracking-widest mb-4">Danger Zone</h3>
+          <button 
+            @click="handleReset"
+            class="w-full flex items-center justify-between p-4 bg-rose-50 dark:bg-rose-950/20 border border-rose-100 dark:border-rose-900/50 rounded-2xl hover:bg-rose-100 dark:hover:bg-rose-900/30 transition-all group text-left"
+          >
+            <div>
+              <h4 class="text-sm font-bold text-rose-600 dark:text-rose-400">Reset All Data</h4>
+              <p class="text-[10px] text-rose-500/60 mt-0.5 font-medium">Clear all Gems from local storage forever.</p>
+            </div>
+            <Trash2 class="w-5 h-5 text-rose-400 group-hover:text-rose-600 transition-colors" />
+          </button>
+        </section>
+
         <!-- ステータスメッセージ -->
-        <div v-if="status" :class="['p-3 rounded-lg flex items-center gap-2 text-sm font-bold animate-in slide-in-from-top-2', status.type === 'success' ? 'bg-emerald-50 text-emerald-600 dark:bg-emerald-950/30 dark:text-emerald-400' : 'bg-rose-50 text-rose-600 dark:bg-rose-950/30 dark:text-rose-400']">
+        <div v-if="status" :class="['p-3 rounded-lg flex items-center gap-2 text-[11px] font-bold animate-in slide-in-from-top-2', status.type === 'success' ? 'bg-emerald-50 text-emerald-600 dark:bg-emerald-950/30 dark:text-emerald-400' : 'bg-rose-50 text-rose-600 dark:bg-rose-950/30 dark:text-rose-400']">
           <AlertCircle v-if="status.type === 'error'" class="w-4 h-4" />
           {{ status.message }}
         </div>
@@ -112,7 +133,7 @@ const handleImport = (event: Event) => {
             </div>
             <div class="text-[10px] text-slate-400 font-medium">
               &copy; 2026 Cellsica. All rights reserved.<br>
-              <span class="opacity-50 mt-1 block">Created with ❤️ for the Gemini Community</span>
+              <span class="opacity-50 mt-1 block tracking-tight">Created with ❤️ for the Gemini Community</span>
             </div>
           </div>
         </section>
