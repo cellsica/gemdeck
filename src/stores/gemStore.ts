@@ -98,6 +98,25 @@ export const useGemStore = defineStore('gem', () => {
     }
   }
 
+  const exportGems = () => {
+    return JSON.stringify(gems.value, null, 2)
+  }
+
+  const importGems = (jsonContent: string) => {
+    try {
+      const data = JSON.parse(jsonContent)
+      if (Array.isArray(data)) {
+        // IDが重複しないようにマージするか、上書きするか
+        // 今回は「バックアップからの復元」なので、一旦まるごと上書きする
+        gems.value = data
+        return true
+      }
+    } catch (e) {
+      console.error('Failed to import gems:', e)
+    }
+    return false
+  }
+
   return {
     gems,
     sortBy,
@@ -106,6 +125,8 @@ export const useGemStore = defineStore('gem', () => {
     updateGem,
     deleteGem,
     touchGem,
-    togglePin
+    togglePin,
+    exportGems,
+    importGems
   }
 })

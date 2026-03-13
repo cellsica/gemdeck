@@ -3,10 +3,12 @@ import { ref } from 'vue'
 import { useGemStore, type Gem } from './stores/gemStore'
 import GemCard from './components/GemCard.vue'
 import GemEditModal from './components/GemEditModal.vue'
+import SettingsModal from './components/SettingsModal.vue'
 import { Plus, Settings2, ArrowUpDown } from 'lucide-vue-next'
 
 const gemStore = useGemStore()
 const isModalOpen = ref(false)
+const isSettingsOpen = ref(false)
 const editingGem = ref<Gem | null>(null)
 
 const openAddModal = () => {
@@ -62,7 +64,11 @@ const toggleSort = () => {
             <span class="hidden md:inline">{{ gemStore.sortBy === 'name' ? '名前順' : '最近使った順' }}</span>
           </button>
           
-          <button class="p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full transition-colors text-slate-500" title="設定">
+          <button 
+            @click="isSettingsOpen = true"
+            class="p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full transition-colors text-slate-500" 
+            title="設定"
+          >
             <Settings2 class="w-5 h-5" />
           </button>
           
@@ -84,6 +90,11 @@ const toggleSort = () => {
       @close="isModalOpen = false"
       @save="handleSaveGem"
       @delete="handleDeleteGem"
+    />
+
+    <SettingsModal 
+      :is-open="isSettingsOpen" 
+      @close="isSettingsOpen = false"
     />
 
     <!-- メインコンテンツ -->
