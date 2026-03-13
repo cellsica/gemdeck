@@ -40,16 +40,43 @@ onMounted(() => {
   const sharedText = params.get('text') || ''
   const sharedUrl = params.get('url') || ''
 
-  // URL または text から有効なURLを探す
-  let targetUrl = sharedUrl
-  if (!targetUrl && sharedText) {
-    const urlMatch = sharedText.match(/https?:\/\/[^\s]+/);
-    if (urlMatch) targetUrl = urlMatch[0];
+  // 1. 全ての情報を統合して、URLらしいものを探す
+  const combinedSource = `${sharedText} ${sharedUrl}`
+  
+  // 2. 最優先：Gem 個別 ID を含む URL を探す ( /gems/ID または ?gem_id=ID )
+  // パス形式とパラメータ形式の両方に対応
+  const gemUrlMatch = combinedSource.match(/https?:\/\/gemini\.google\.com\/(gems\/[a-zA-Z0-9_-]+|app\?[^\s]*gem_id=[a-zA-Z0-9_-]+|\?[^\s]*gem_id=[a-zA-Z0-9_-]+)/);
+  
+  let targetUrl = ''
+  if (gemUrlMatch) {
+    targetUrl = gemUrlMatch[0];
+  } else {
+    // もし直接的なマッチがなければ、共有されたURL自体にパラメータが含まれているか再チェック
+    try {
+      const u = new URL(sharedUrl || sharedText.match(/https?:\/\/[^\s]+/)?.[0] || '');
+      if (u.searchParams.has('gem_id')) {
+        targetUrl = u.toString();
+      }
+    } catch(e) {}
+
+    // 3. 次点：一般的な URL を探す (Gemini以外でも使えるように)
+    if (!targetUrl) {
+      const urlMatch = combinedSource.match(/https?:\/\/[^\s]+/);
+      if (urlMatch) targetUrl = urlMatch[0];
+    }
+  }
+
+  // Gemini のベースURLだけの場合は、IDがないので自動機能はスキップする
+  const isBaseUrl = targetUrl.split('?')[0] === 'https://gemini.google.com/' || targetUrl.split('?')[0] === 'https://gemini.google.com/app';
+  if (isBaseUrl && !targetUrl.includes('gem_id') && !targetUrl.includes('/gems/')) {
+    targetUrl = '';
   }
 
   if (targetUrl) {
-    openAddModal(targetUrl, sharedTitle)
-    // クエリパラメータをクリアして、リロード時に再度開かないようにする
+    // タイトルの抽出（text フィールドからタイトルを抜き出す）
+    const targetTitle = sharedTitle || (sharedText.split('https')[0].trim()) || '';
+    
+    openAddModal(targetUrl, targetTitle)
     window.history.replaceState({}, document.title, window.location.pathname)
   }
 })
