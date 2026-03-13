@@ -48,6 +48,7 @@ const aiServiceName = computed(() => {
   if (url.includes('perplexity.ai')) return 'Perplexity'
   if (url.includes('copilot.microsoft.com')) return 'Copilot'
   if (url.includes('v0.dev')) return 'v0'
+  if (url.includes('ai.rakuten.co.jp')) return 'Rakuten'
   if (url.includes('gemini.google.com')) return 'Gem'
   return 'Link'
 })
