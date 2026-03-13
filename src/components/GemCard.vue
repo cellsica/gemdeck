@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import { useGemStore, type Gem } from '../stores/gemStore'
-import { ExternalLink, Pencil } from 'lucide-vue-next'
+import { ExternalLink, Pencil, Pin, PinOff } from 'lucide-vue-next'
 
 const props = defineProps<{
   gem: Gem
@@ -12,6 +12,11 @@ const emit = defineEmits<{
 }>()
 
 const gemStore = useGemStore()
+
+const handleOpenGem = () => {
+  gemStore.touchGem(props.gem.id)
+  window.open(props.gem.gemUrl, '_blank')
+}
 
 const firstLetter = computed(() => props.gem.name.charAt(0).toUpperCase())
 
@@ -44,22 +49,25 @@ const bgColor = computed(() => {
       </div>
 
       <div class="flex items-start gap-4 mb-4">
-        <!-- アイコン部分 -->
-        <div class="shrink-0">
-          <img v-if="gem.iconUrl" :src="gem.iconUrl" :alt="gem.name" class="w-16 h-16 rounded-full object-cover border-2 border-slate-100 dark:border-slate-700" />
-          <div v-else :class="['w-16 h-16 rounded-full flex items-center justify-center text-white text-2xl font-bold shadow-inner', bgColor]">
+        <!-- アイコン部分 (クリックで開く) -->
+        <button @click="handleOpenGem" class="shrink-0 group/icon relative">
+          <img v-if="gem.iconUrl" :src="gem.iconUrl" :alt="gem.name" class="w-16 h-16 rounded-full object-cover border-2 border-slate-100 dark:border-slate-700 group-hover/icon:opacity-80 transition-opacity" />
+          <div v-else :class="['w-16 h-16 rounded-full flex items-center justify-center text-white text-2xl font-bold shadow-inner group-hover/icon:opacity-80 transition-opacity', bgColor]">
             {{ firstLetter }}
           </div>
-        </div>
+          <div class="absolute inset-0 flex items-center justify-center opacity-0 group-hover/icon:opacity-100 transition-opacity">
+            <ExternalLink class="w-6 h-6 text-white drop-shadow-md" />
+          </div>
+        </button>
 
         <!-- 名前とリンク -->
         <div class="flex-1 min-w-0">
           <h3 class="text-xl font-bold text-slate-800 dark:text-slate-100 truncate group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors">
             {{ gem.name }}
           </h3>
-          <a @click="gemStore.touchGem(gem.id)" :href="gem.gemUrl" target="_blank" class="inline-flex items-center gap-1 text-xs text-indigo-500 hover:text-indigo-600 font-medium mt-1">
+          <button @click="handleOpenGem" class="inline-flex items-center gap-1 text-xs text-indigo-500 hover:text-indigo-600 font-medium mt-1">
             Open Gem <ExternalLink class="w-3 h-3" />
-          </a>
+          </button>
         </div>
       </div>
 
@@ -69,10 +77,17 @@ const bgColor = computed(() => {
       </p>
     </div>
 
-    <!-- カード下部の「チップ」っぽい装飾 -->
-    <div class="px-5 py-3 bg-slate-50 dark:bg-slate-800/50 border-top border-slate-100 dark:border-slate-800 flex justify-between items-center text-[10px] text-slate-400 font-mono">
-      <span>ID: {{ gem.id.slice(0, 8) }}</span>
-      <span class="px-2 py-0.5 rounded-full bg-slate-200 dark:bg-slate-700 text-slate-500 dark:text-slate-400">ACTIVE</span>
-    </div>
+    <!-- カード下部 (Pin留め切り替え) -->
+    <button 
+      @click="gemStore.togglePin(gem.id)"
+      class="w-full px-5 py-3 bg-slate-50 dark:bg-slate-800/50 border-t border-slate-100 dark:border-slate-800 flex justify-between items-center text-[10px] font-mono transition-colors hover:bg-slate-100 dark:hover:bg-slate-700/50"
+    >
+      <span class="text-slate-400">ID: {{ gem.id.slice(0, 8) }}</span>
+      <div class="flex items-center gap-1.5" :class="gem.isPinned ? 'text-indigo-500 dark:text-indigo-400 font-bold' : 'text-slate-400'">
+        <Pin v-if="gem.isPinned" class="w-3.5 h-3.5 fill-current" />
+        <PinOff v-else class="w-3.5 h-3.5 rotate-45" />
+        {{ gem.isPinned ? 'PINNED' : 'PIN' }}
+      </div>
+    </button>
   </div>
 </template>
