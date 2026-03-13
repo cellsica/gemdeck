@@ -53,7 +53,7 @@ const handleImport = (event: Event) => {
 }
 
 const handleReset = () => {
-  if (window.confirm('本当に全てのデータを消去してもいいのか？バックアップは取ったか？')) {
+  if (window.confirm('全てのデータをリセットしてもよろしいですか？（元に戻せませんが、バックアップは大丈夫ですか？）')) {
     gemStore.clearAllGems()
     emit('close')
   }
