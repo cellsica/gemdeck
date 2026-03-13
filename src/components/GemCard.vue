@@ -39,6 +39,18 @@ const bgColor = computed(() => {
   const index = props.gem.name.length % colors.length
   return colors[index]
 })
+
+// URL からAIサービスを判定する
+const aiServiceName = computed(() => {
+  const url = props.gem.gemUrl.toLowerCase()
+  if (url.includes('claude.ai')) return 'Claude'
+  if (url.includes('chatgpt.com') || url.includes('chat.openai.com')) return 'ChatGPT'
+  if (url.includes('perplexity.ai')) return 'Perplexity'
+  if (url.includes('copilot.microsoft.com')) return 'Copilot'
+  if (url.includes('v0.dev')) return 'v0'
+  if (url.includes('gemini.google.com')) return 'Gem'
+  return 'Link'
+})
 </script>
 
 <template>
@@ -79,7 +91,7 @@ const bgColor = computed(() => {
             {{ gem.name }}
           </h3>
           <button @click="handleOpenGem" class="inline-flex items-center gap-1 text-xs text-indigo-500 hover:text-indigo-600 font-medium mt-1">
-            Open Gem <ExternalLink class="w-3 h-3" />
+            Open {{ aiServiceName }} <ExternalLink class="w-3 h-3" />
           </button>
         </div>
       </div>
