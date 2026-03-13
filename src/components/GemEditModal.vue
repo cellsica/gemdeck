@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, watch } from 'vue'
-import { X } from 'lucide-vue-next'
+import { X, Trash2 } from 'lucide-vue-next'
 
 const props = defineProps<{
   isOpen: boolean
@@ -11,6 +11,7 @@ const props = defineProps<{
 const emit = defineEmits<{
   (e: 'close'): void
   (e: 'save', data: { role: string, name: string, description: string, iconUrl: string, gemUrl: string }): void
+  (e: 'delete'): void
 }>()
 
 const form = ref({
@@ -23,6 +24,12 @@ const form = ref({
 
 const save = () => {
   emit('save', { ...form.value })
+}
+
+const confirmDelete = () => {
+  if (window.confirm('本当にこのGemを削除する？')) {
+    emit('delete')
+  }
 }
 
 const resetForm = () => {
@@ -89,13 +96,26 @@ watch(() => props.initialData, () => {
         </div>
       </div>
 
-      <div class="px-6 py-4 bg-slate-50 dark:bg-slate-800/50 flex justify-end gap-3">
-        <button @click="emit('close')" class="px-4 py-2 text-sm font-bold text-slate-600 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200 transition-colors">
-          キャンセル
-        </button>
-        <button @click="save" class="px-6 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg font-bold text-sm shadow-lg shadow-indigo-500/30 transition-all">
-          保存する
-        </button>
+      <div class="px-6 py-4 bg-slate-50 dark:bg-slate-800/50 flex justify-between items-center gap-3">
+        <div>
+          <button 
+            v-if="initialData"
+            @click="confirmDelete" 
+            class="flex items-center gap-2 px-3 py-2 text-rose-500 hover:bg-rose-50 dark:hover:bg-rose-950/30 rounded-lg transition-colors text-sm font-bold"
+          >
+            <Trash2 class="w-4 h-4" />
+            削除
+          </button>
+        </div>
+
+        <div class="flex gap-3">
+          <button @click="emit('close')" class="px-4 py-2 text-sm font-bold text-slate-600 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200 transition-colors">
+            キャンセル
+          </button>
+          <button @click="save" class="px-6 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg font-bold text-sm shadow-lg shadow-indigo-500/30 transition-all">
+            保存する
+          </button>
+        </div>
       </div>
     </div>
   </div>

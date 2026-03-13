@@ -68,6 +68,13 @@ export const useGemStore = defineStore('gem', () => {
     }
   }
 
+  const deleteGem = (id: string) => {
+    const index = gems.value.findIndex(g => g.id === id)
+    if (index !== -1) {
+      gems.value.splice(index, 1)
+    }
+  }
+
   const touchGem = (id: string) => {
     const gem = gems.value.find(g => g.id === id)
     if (gem) {
@@ -81,6 +88,7 @@ export const useGemStore = defineStore('gem', () => {
     sortedGems,
     addGem,
     updateGem,
+    deleteGem,
     touchGem
   }
 })

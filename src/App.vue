@@ -28,6 +28,13 @@ const handleSaveGem = (data: any) => {
   isModalOpen.value = false
 }
 
+const handleDeleteGem = () => {
+  if (editingGem.value) {
+    gemStore.deleteGem(editingGem.value.id)
+    isModalOpen.value = false
+  }
+}
+
 const toggleSort = () => {
   gemStore.sortBy = gemStore.sortBy === 'name' ? 'lastUsed' : 'name'
 }
@@ -76,6 +83,7 @@ const toggleSort = () => {
       :initial-data="editingGem || undefined"
       @close="isModalOpen = false"
       @save="handleSaveGem"
+      @delete="handleDeleteGem"
     />
 
     <!-- メインコンテンツ -->
