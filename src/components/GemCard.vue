@@ -50,19 +50,19 @@ const bgColor = computed(() => {
 
       <div class="flex items-start gap-4 mb-4">
         <!-- アイコン部分 (クリックで開く) -->
-        <button @click="handleOpenGem" class="shrink-0 group/icon relative">
-          <img v-if="gem.iconUrl" :src="gem.iconUrl" :alt="gem.name" class="w-16 h-16 rounded-full object-cover border-2 border-slate-100 dark:border-slate-700 group-hover/icon:opacity-80 transition-opacity" />
-          <div v-else :class="['w-16 h-16 rounded-full flex items-center justify-center text-white text-2xl font-bold shadow-inner group-hover/icon:opacity-80 transition-opacity', bgColor]">
+        <button @click="handleOpenGem" class="shrink-0 group/icon relative overflow-hidden rounded-full">
+          <img v-if="gem.iconUrl" :src="gem.iconUrl" :alt="gem.name" class="w-16 h-16 rounded-full object-cover border-2 border-slate-100 dark:border-slate-700 group-hover/icon:brightness-50 transition-all duration-300 transform group-hover/icon:scale-110" />
+          <div v-else :class="['w-16 h-16 rounded-full flex items-center justify-center text-white text-2xl font-bold shadow-inner group-hover/icon:brightness-50 transition-all duration-300 transform group-hover/icon:scale-110', bgColor]">
             {{ firstLetter }}
           </div>
-          <div class="absolute inset-0 flex items-center justify-center opacity-0 group-hover/icon:opacity-100 transition-opacity">
-            <ExternalLink class="w-6 h-6 text-white drop-shadow-md" />
+          <div class="absolute inset-0 flex items-center justify-center opacity-0 group-hover/icon:opacity-100 transition-all duration-300">
+            <ExternalLink class="w-7 h-7 text-white drop-shadow-[0_0_8px_rgba(255,255,255,0.8)]" />
           </div>
         </button>
 
         <!-- 名前とリンク -->
         <div class="flex-1 min-w-0">
-          <h3 class="text-xl font-bold text-slate-800 dark:text-slate-100 truncate group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors">
+          <h3 class="text-xl font-bold text-slate-800 dark:text-slate-100 truncate group-hover/title:text-indigo-600 dark:group-hover/title:text-indigo-400 transition-colors">
             {{ gem.name }}
           </h3>
           <button @click="handleOpenGem" class="inline-flex items-center gap-1 text-xs text-indigo-500 hover:text-indigo-600 font-medium mt-1">
@@ -80,13 +80,13 @@ const bgColor = computed(() => {
     <!-- カード下部 (Pin留め切り替え) -->
     <button 
       @click="gemStore.togglePin(gem.id)"
-      class="w-full px-5 py-3 bg-slate-50 dark:bg-slate-800/50 border-t border-slate-100 dark:border-slate-800 flex justify-between items-center text-[10px] font-mono transition-colors hover:bg-slate-100 dark:hover:bg-slate-700/50"
+      class="w-full px-5 py-3 bg-slate-50 dark:bg-slate-800/50 border-t border-slate-100 dark:border-slate-800 flex justify-between items-center transition-colors hover:bg-slate-100 dark:hover:bg-slate-700/50"
+      :title="gem.isPinned ? 'ピン留めを解除' : 'ピン留めする'"
     >
-      <span class="text-slate-400">ID: {{ gem.id.slice(0, 8) }}</span>
-      <div class="flex items-center gap-1.5" :class="gem.isPinned ? 'text-indigo-500 dark:text-indigo-400 font-bold' : 'text-slate-400'">
-        <Pin v-if="gem.isPinned" class="w-3.5 h-3.5 fill-current" />
-        <PinOff v-else class="w-3.5 h-3.5 rotate-45" />
-        {{ gem.isPinned ? 'PINNED' : 'PIN' }}
+      <span class="text-[10px] font-mono text-slate-400">ID: {{ gem.id.slice(0, 8) }}</span>
+      <div class="flex items-center" :class="gem.isPinned ? 'text-indigo-500 dark:text-indigo-400' : 'text-slate-300 dark:text-slate-600'">
+        <Pin v-if="gem.isPinned" class="w-5 h-5 fill-current" />
+        <PinOff v-else class="w-5 h-5 opacity-40 transition-opacity hover:opacity-100" />
       </div>
     </button>
   </div>
