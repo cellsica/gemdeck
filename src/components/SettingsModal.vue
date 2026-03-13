@@ -1,3 +1,4 @@
+<script setup lang="ts">
 import { ref } from 'vue'
 import { useGemStore } from '../stores/gemStore'
 import { X, Download, Upload, ShieldCheck, AlertCircle, Trash2 } from 'lucide-vue-next'
