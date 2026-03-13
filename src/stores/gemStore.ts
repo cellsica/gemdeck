@@ -1,3 +1,4 @@
+import { computed, ref } from 'vue'
 import { defineStore } from 'pinia'
 import { useStorage } from '@vueuse/core'
 
@@ -8,7 +9,10 @@ export interface Gem {
   description: string
   iconUrl: string
   gemUrl: string
+  lastUsedAt?: number
 }
+
+export type SortBy = 'name' | 'lastUsed'
 
 export const useGemStore = defineStore('gem', () => {
   const gems = useStorage<Gem[]>('gem-deck-data', [
@@ -17,8 +21,9 @@ export const useGemStore = defineStore('gem', () => {
       role: 'Python Specialist',
       name: 'Code Buddy',
       description: 'Vue.jsやPythonのコードレビュー、デバッグを担当。',
-      iconUrl: '', // 空の場合は頭文字を表示
-      gemUrl: 'https://gemini.google.com/gems/'
+      iconUrl: '',
+      gemUrl: 'https://gemini.google.com/gems/',
+      lastUsedAt: Date.now()
     },
     {
       id: 'mock-2',
@@ -26,20 +31,44 @@ export const useGemStore = defineStore('gem', () => {
       name: 'Story Weaver',
       description: '小説のプロット作成やキャラクター設定の壁打ち相手。',
       iconUrl: '',
-      gemUrl: 'https://gemini.google.com/gems/'
+      gemUrl: 'https://gemini.google.com/gems/',
+      lastUsedAt: Date.now() - 100000 // 少し古くする
     }
   ])
 
-  const addGem = (gemData: Omit<Gem, 'id'>) => {
+  const sortBy = ref<SortBy>('name')
+
+  const sortedGems = computed(() => {
+    const list = [...gems.value]
+    if (sortBy.value === 'name') {
+      return list.sort((a, b) => a.name.localeCompare(b.name, 'ja'))
+    } else if (sortBy.value === 'lastUsed') {
+      return list.sort((a, b) => (b.lastUsedAt || 0) - (a.lastUsedAt || 0))
+    }
+    return list
+  })
+
+  const addGem = (gemData: Omit<Gem, 'id' | 'lastUsedAt'>) => {
     const newGem: Gem = {
       ...gemData,
-      id: crypto.randomUUID()
+      id: crypto.randomUUID(),
+      lastUsedAt: Date.now()
     }
     gems.value.push(newGem)
   }
 
+  const touchGem = (id: string) => {
+    const gem = gems.value.find(g => g.id === id)
+    if (gem) {
+      gem.lastUsedAt = Date.now()
+    }
+  }
+
   return {
     gems,
-    addGem
+    sortBy,
+    sortedGems,
+    addGem,
+    touchGem
   }
 })

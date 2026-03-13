@@ -1,11 +1,13 @@
 <script setup lang="ts">
 import { computed } from 'vue'
-import type { Gem } from '../stores/gemStore'
+import { useGemStore, type Gem } from '../stores/gemStore'
 import { ExternalLink } from 'lucide-vue-next'
 
 const props = defineProps<{
   gem: Gem
 }>()
+
+const gemStore = useGemStore()
 
 const firstLetter = computed(() => props.gem.name.charAt(0).toUpperCase())
 
@@ -42,7 +44,7 @@ const bgColor = computed(() => {
           <h3 class="text-xl font-bold text-slate-800 dark:text-slate-100 truncate group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors">
             {{ gem.name }}
           </h3>
-          <a :href="gem.gemUrl" target="_blank" class="inline-flex items-center gap-1 text-xs text-indigo-500 hover:text-indigo-600 font-medium mt-1">
+          <a @click="gemStore.touchGem(gem.id)" :href="gem.gemUrl" target="_blank" class="inline-flex items-center gap-1 text-xs text-indigo-500 hover:text-indigo-600 font-medium mt-1">
             Open Gem <ExternalLink class="w-3 h-3" />
           </a>
         </div>

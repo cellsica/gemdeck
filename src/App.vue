@@ -3,7 +3,7 @@ import { ref } from 'vue'
 import { useGemStore } from './stores/gemStore'
 import GemCard from './components/GemCard.vue'
 import GemEditModal from './components/GemEditModal.vue'
-import { Plus, Settings2 } from 'lucide-vue-next'
+import { Plus, Settings2, ArrowUpDown } from 'lucide-vue-next'
 
 const gemStore = useGemStore()
 const isModalOpen = ref(false)
@@ -11,6 +11,10 @@ const isModalOpen = ref(false)
 const handleAddGem = (data: any) => {
   gemStore.addGem(data)
   isModalOpen.value = false
+}
+
+const toggleSort = () => {
+  gemStore.sortBy = gemStore.sortBy === 'name' ? 'lastUsed' : 'name'
 }
 </script>
 
@@ -27,15 +31,25 @@ const handleAddGem = (data: any) => {
         </div>
         
         <div class="flex items-center gap-3">
+          <button 
+            @click="toggleSort"
+            class="hidden sm:flex items-center gap-2 px-3 py-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors text-slate-600 dark:text-slate-400 text-sm font-medium"
+            :title="gemStore.sortBy === 'name' ? '名前順で表示中' : '最近使った順で表示中'"
+          >
+            <ArrowUpDown class="w-4 h-4" />
+            <span class="hidden md:inline">{{ gemStore.sortBy === 'name' ? '名前順' : '最近使った順' }}</span>
+          </button>
+          
           <button class="p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full transition-colors text-slate-500" title="設定">
             <Settings2 class="w-5 h-5" />
           </button>
+          
           <button 
             @click="isModalOpen = true"
             class="flex items-center gap-2 bg-slate-900 dark:bg-slate-100 text-white dark:text-slate-900 px-4 py-2 rounded-lg font-bold text-sm hover:opacity-90 transition-opacity shadow-sm active:scale-95"
           >
             <Plus class="w-4 h-4" />
-            Add Gem
+            <span class="hidden sm:inline">Add Gem</span>
           </button>
         </div>
       </div>
@@ -53,7 +67,7 @@ const handleAddGem = (data: any) => {
       <!-- グリッドレイアウト -->
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
         <GemCard 
-          v-for="gem in gemStore.gems" 
+          v-for="gem in gemStore.sortedGems" 
           :key="gem.id" 
           :gem="gem" 
         />
