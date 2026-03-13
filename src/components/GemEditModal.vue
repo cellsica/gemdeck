@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, watch } from 'vue'
-import { X, Trash2 } from 'lucide-vue-next'
+import { X, Trash2, Info, ClipboardPaste } from 'lucide-vue-next'
 
 const props = defineProps<{
   isOpen: boolean
@@ -29,6 +29,17 @@ const save = () => {
 const confirmDelete = () => {
   if (window.confirm('本当にこのGemを削除する？')) {
     emit('delete')
+  }
+}
+
+const handlePaste = async () => {
+  try {
+    const text = await navigator.clipboard.readText()
+    if (text) {
+      form.value.gemUrl = text
+    }
+  } catch (err) {
+    console.error('Failed to read clipboard:', err)
   }
 }
 
@@ -86,8 +97,41 @@ watch(() => props.initialData, () => {
         </div>
 
         <div>
-          <label class="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-1">GemのURL (unique-id含む)</label>
-          <input v-model="form.gemUrl" type="text" placeholder="https://gemini.google.com/gems/..." class="w-full px-4 py-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 focus:ring-2 focus:ring-indigo-500 outline-none transition-all" />
+          <div class="flex items-center gap-1.5 mb-1">
+            <label class="block text-sm font-bold text-slate-700 dark:text-slate-300">GemのURL (unique-id含む)</label>
+            <div class="group/tip relative inline-block">
+              <Info class="w-4 h-4 text-slate-400 cursor-help" />
+              <div class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-64 p-2 bg-slate-800 text-white text-[10px] leading-relaxed rounded shadow-xl opacity-0 group-hover/tip:opacity-100 transition-opacity pointer-events-none z-20">
+                ブラウザでGemを開いた時のアドレスバーのURLを直接貼り付けるのが確実です。（共有用URLだと余計な手順が必要になる場合があります）
+                <div class="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-slate-800"></div>
+              </div>
+            </div>
+          </div>
+          <div class="relative group">
+            <input 
+              v-model="form.gemUrl" 
+              type="text" 
+              placeholder="https://gemini.google.com/gems/..." 
+              class="w-full pl-4 pr-20 py-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 focus:ring-2 focus:ring-indigo-500 outline-none transition-all" 
+            />
+            <div class="absolute right-2 top-1/2 -translate-y-1/2 flex items-center gap-1">
+              <button 
+                v-if="form.gemUrl"
+                @click="form.gemUrl = ''" 
+                class="p-1.5 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 transition-colors"
+                title="クリア"
+              >
+                <X class="w-4 h-4" />
+              </button>
+              <button 
+                @click="handlePaste" 
+                class="p-1.5 text-indigo-500 hover:text-indigo-600 transition-colors"
+                title="クリップボードから貼り付け"
+              >
+                <ClipboardPaste class="w-4 h-4" />
+              </button>
+            </div>
+          </div>
         </div>
 
         <div>
