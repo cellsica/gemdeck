@@ -1,10 +1,14 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import { useGemStore, type Gem } from '../stores/gemStore'
-import { ExternalLink } from 'lucide-vue-next'
+import { ExternalLink, Pencil } from 'lucide-vue-next'
 
 const props = defineProps<{
   gem: Gem
+}>()
+
+const emit = defineEmits<{
+  (e: 'edit', gem: Gem): void
 }>()
 
 const gemStore = useGemStore()
@@ -24,6 +28,15 @@ const bgColor = computed(() => {
     <!-- 装飾的なヘッダー（セキュリティカード風のライン） -->
     <div class="h-1.5 w-full bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500"></div>
     
+    <!-- 編集ボタン (右上) -->
+    <button 
+      @click="emit('edit', gem)"
+      class="absolute top-4 right-4 p-2 bg-white/90 dark:bg-slate-800/90 hover:bg-white dark:hover:bg-slate-700 rounded-full shadow-sm border border-slate-100 dark:border-slate-700 opacity-0 group-hover:opacity-100 transition-all duration-200 z-10"
+      title="編集"
+    >
+      <Pencil class="w-3.5 h-3.5 text-slate-500" />
+    </button>
+
     <div class="p-5">
       <!-- Role (担当分野) -->
       <div class="text-[10px] font-bold uppercase tracking-widest text-slate-400 dark:text-slate-500 mb-1">

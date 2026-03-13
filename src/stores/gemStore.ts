@@ -57,6 +57,17 @@ export const useGemStore = defineStore('gem', () => {
     gems.value.push(newGem)
   }
 
+  const updateGem = (id: string, gemData: Omit<Gem, 'id' | 'lastUsedAt'>) => {
+    const index = gems.value.findIndex(g => g.id === id)
+    if (index !== -1) {
+      gems.value[index] = {
+        ...gems.value[index],
+        ...gemData,
+        lastUsedAt: Date.now()
+      }
+    }
+  }
+
   const touchGem = (id: string) => {
     const gem = gems.value.find(g => g.id === id)
     if (gem) {
@@ -69,6 +80,7 @@ export const useGemStore = defineStore('gem', () => {
     sortBy,
     sortedGems,
     addGem,
+    updateGem,
     touchGem
   }
 })

@@ -1,15 +1,30 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import { useGemStore } from './stores/gemStore'
+import { useGemStore, type Gem } from './stores/gemStore'
 import GemCard from './components/GemCard.vue'
 import GemEditModal from './components/GemEditModal.vue'
 import { Plus, Settings2, ArrowUpDown } from 'lucide-vue-next'
 
 const gemStore = useGemStore()
 const isModalOpen = ref(false)
+const editingGem = ref<Gem | null>(null)
 
-const handleAddGem = (data: any) => {
-  gemStore.addGem(data)
+const openAddModal = () => {
+  editingGem.value = null
+  isModalOpen.value = true
+}
+
+const openEditModal = (gem: Gem) => {
+  editingGem.value = gem
+  isModalOpen.value = true
+}
+
+const handleSaveGem = (data: any) => {
+  if (editingGem.value) {
+    gemStore.updateGem(editingGem.value.id, data)
+  } else {
+    gemStore.addGem(data)
+  }
   isModalOpen.value = false
 }
 
@@ -45,7 +60,7 @@ const toggleSort = () => {
           </button>
           
           <button 
-            @click="isModalOpen = true"
+            @click="openAddModal"
             class="flex items-center gap-2 bg-slate-900 dark:bg-slate-100 text-white dark:text-slate-900 px-4 py-2 rounded-lg font-bold text-sm hover:opacity-90 transition-opacity shadow-sm active:scale-95"
           >
             <Plus class="w-4 h-4" />
@@ -57,9 +72,10 @@ const toggleSort = () => {
 
     <GemEditModal 
       :is-open="isModalOpen" 
-      title="新しいGemを召喚" 
+      :title="editingGem ? 'Gemを編集' : '新しいGemを召喚'" 
+      :initial-data="editingGem || undefined"
       @close="isModalOpen = false"
-      @save="handleAddGem"
+      @save="handleSaveGem"
     />
 
     <!-- メインコンテンツ -->
@@ -70,6 +86,7 @@ const toggleSort = () => {
           v-for="gem in gemStore.sortedGems" 
           :key="gem.id" 
           :gem="gem" 
+          @edit="openEditModal"
         />
       </div>
       

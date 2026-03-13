@@ -5,6 +5,7 @@ import { X } from 'lucide-vue-next'
 const props = defineProps<{
   isOpen: boolean
   title: string
+  initialData?: { role: string, name: string, description: string, iconUrl: string, gemUrl: string }
 }>()
 
 const emit = defineEmits<{
@@ -22,22 +23,29 @@ const form = ref({
 
 const save = () => {
   emit('save', { ...form.value })
-  resetForm()
 }
 
 const resetForm = () => {
-  form.value = {
-    role: '',
-    name: '',
-    description: '',
-    iconUrl: '',
-    gemUrl: 'https://gemini.google.com/gems/'
+  if (props.initialData) {
+    form.value = { ...props.initialData }
+  } else {
+    form.value = {
+      role: '',
+      name: '',
+      description: '',
+      iconUrl: '',
+      gemUrl: 'https://gemini.google.com/gems/'
+    }
   }
 }
 
 watch(() => props.isOpen, (newVal) => {
-  if (!newVal) resetForm()
+  if (newVal) resetForm()
 })
+
+watch(() => props.initialData, () => {
+  if (props.isOpen) resetForm()
+}, { deep: true })
 </script>
 
 <template>
