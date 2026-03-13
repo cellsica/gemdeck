@@ -30,7 +30,16 @@ export const useGemStore = defineStore('gem', () => {
     }
   ])
 
+  const addGem = (gemData: Omit<Gem, 'id'>) => {
+    const newGem: Gem = {
+      ...gemData,
+      id: crypto.randomUUID()
+    }
+    gems.value.push(newGem)
+  }
+
   return {
-    gems
+    gems,
+    addGem
   }
 })
