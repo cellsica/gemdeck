@@ -51,7 +51,10 @@ const toggleSort = () => {
           <div class="w-8 h-8 bg-indigo-600 rounded-lg flex items-center justify-center text-white font-black text-xl shadow-lg shadow-indigo-500/30 text-[18px]">
             G
           </div>
-          <h1 class="text-xl font-bold tracking-tight">GemDeck</h1>
+          <div>
+            <h1 class="text-xl font-bold tracking-tight leading-none">GemDeck</h1>
+            <span class="text-[9px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-tighter">Powered by Cellsica</span>
+          </div>
         </div>
         
         <div class="flex items-center gap-3">

@@ -105,9 +105,15 @@ const handleImport = (event: Event) => {
         </div>
 
         <section class="pt-4 border-t border-slate-100 dark:border-slate-800">
-          <div class="text-center text-[10px] text-slate-400 font-medium">
-            GemDeck v0.1.0 - Premium Security Design<br>
-            Created for nabe by kaede
+          <div class="text-center">
+            <div class="inline-flex items-center gap-1.5 px-3 py-1 bg-slate-100 dark:bg-slate-800 rounded-full text-[10px] font-bold text-slate-500 dark:text-slate-400 mb-2">
+              <span class="w-1.5 h-1.5 bg-indigo-500 rounded-full animate-pulse"></span>
+              GemDeck v1.0.0
+            </div>
+            <div class="text-[10px] text-slate-400 font-medium">
+              &copy; 2026 Cellsica. All rights reserved.<br>
+              <span class="opacity-50 mt-1 block">Created with ❤️ for the Gemini Community</span>
+            </div>
           </div>
         </section>
       </div>
