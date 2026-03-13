@@ -20,6 +20,19 @@ const handleOpenGem = () => {
 
 const firstLetter = computed(() => props.gem.name.charAt(0).toUpperCase())
 
+// Google Drive のプレビュー用URLなどを直接表示用URLに変換
+const displayIconUrl = computed(() => {
+  if (!props.gem.iconUrl) return ''
+  
+  // Google Drive の共有リンクパターン: https://drive.google.com/file/d/ID/view?usp=sharing
+  const driveMatch = props.gem.iconUrl.match(/\/file\/d\/([^\/]+)/)
+  if (driveMatch && driveMatch[1]) {
+    return `https://lh3.googleusercontent.com/d/${driveMatch[1]}`
+  }
+  
+  return props.gem.iconUrl
+})
+
 // アイコンがない場合の背景色を名前から生成
 const bgColor = computed(() => {
   const colors = ['bg-blue-500', 'bg-purple-500', 'bg-indigo-500', 'bg-teal-500', 'bg-rose-500']
@@ -51,7 +64,7 @@ const bgColor = computed(() => {
       <div class="flex items-start gap-4 mb-4">
         <!-- アイコン部分 (クリックで開く) -->
         <button @click="handleOpenGem" class="shrink-0 group/icon relative overflow-hidden rounded-full">
-          <img v-if="gem.iconUrl" :src="gem.iconUrl" :alt="gem.name" class="w-16 h-16 rounded-full object-cover border-2 border-slate-100 dark:border-slate-700 group-hover/icon:brightness-50 transition-all duration-300 transform group-hover/icon:scale-110" />
+          <img v-if="displayIconUrl" :src="displayIconUrl" :alt="gem.name" class="w-16 h-16 rounded-full object-cover border-2 border-slate-100 dark:border-slate-700 group-hover/icon:brightness-50 transition-all duration-300 transform group-hover/icon:scale-110" />
           <div v-else :class="['w-16 h-16 rounded-full flex items-center justify-center text-white text-2xl font-bold shadow-inner group-hover/icon:brightness-50 transition-all duration-300 transform group-hover/icon:scale-110', bgColor]">
             {{ firstLetter }}
           </div>
