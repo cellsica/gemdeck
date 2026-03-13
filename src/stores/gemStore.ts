@@ -16,28 +16,7 @@ export interface Gem {
 export type SortBy = 'name' | 'lastUsed'
 
 export const useGemStore = defineStore('gem', () => {
-  const gems = useStorage<Gem[]>('gem-deck-data', [
-    {
-      id: 'mock-1',
-      role: 'Python Specialist',
-      name: 'Code Buddy',
-      description: 'Vue.jsやPythonのコードレビュー、デバッグを担当。',
-      iconUrl: '',
-      gemUrl: 'https://gemini.google.com/gems/',
-      lastUsedAt: Date.now(),
-      isPinned: true
-    },
-    {
-      id: 'mock-2',
-      role: 'Creative Writer',
-      name: 'Story Weaver',
-      description: '小説のプロット作成やキャラクター設定の壁打ち相手。',
-      iconUrl: '',
-      gemUrl: 'https://gemini.google.com/gems/',
-      lastUsedAt: Date.now() - 100000,
-      isPinned: false
-    }
-  ])
+  const gems = useStorage<Gem[]>('gem-deck-data', [])
 
   const sortBy = ref<SortBy>('name')
 

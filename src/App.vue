@@ -4,7 +4,7 @@ import { useGemStore, type Gem } from './stores/gemStore'
 import GemCard from './components/GemCard.vue'
 import GemEditModal from './components/GemEditModal.vue'
 import SettingsModal from './components/SettingsModal.vue'
-import { Plus, Settings2, ArrowUpDown } from 'lucide-vue-next'
+import { Plus, Settings2, ArrowUpDown, Sparkles } from 'lucide-vue-next'
 
 const gemStore = useGemStore()
 const isModalOpen = ref(false)
@@ -102,8 +102,8 @@ const toggleSort = () => {
 
     <!-- メインコンテンツ -->
     <main class="max-w-7xl mx-auto px-4 py-8">
-      <!-- グリッドレイアウト -->
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+      <!-- Gemが存在する場合 -->
+      <div v-if="gemStore.sortedGems.length > 0" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 animate-in fade-in slide-in-from-bottom-4 duration-700">
         <GemCard 
           v-for="gem in gemStore.sortedGems" 
           :key="gem.id" 
@@ -111,11 +111,59 @@ const toggleSort = () => {
           @edit="openEditModal"
         />
       </div>
-      
-      <!-- データが空の場合 -->
-      <div v-if="gemStore.gems.length === 0" class="text-center py-20">
-        <div class="text-slate-400 mb-4 text-6xl">📭</div>
-        <p class="text-slate-500 font-medium">Gemがまだ登録されてないよ。</p>
+
+      <!-- Gemが1つもない場合（チュートリアル表示） -->
+      <div v-else class="max-w-2xl mx-auto mt-12 mb-20 animate-in fade-in zoom-in duration-500">
+        <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-8 md:p-12 shadow-2xl relative overflow-hidden">
+          <!-- 背景装飾 -->
+          <div class="absolute -top-24 -right-24 w-64 h-64 bg-indigo-500/10 rounded-full blur-3xl"></div>
+          <div class="absolute -bottom-24 -left-24 w-64 h-64 bg-purple-500/10 rounded-full blur-3xl"></div>
+
+          <div class="relative z-10 flex flex-col items-center text-center">
+            <div class="w-20 h-20 bg-gradient-to-tr from-indigo-500 to-purple-500 rounded-2xl shadow-xl shadow-indigo-500/20 flex items-center justify-center mb-8 rotate-3">
+              <Sparkles class="w-10 h-10 text-white" />
+            </div>
+            
+            <h2 class="text-3xl font-black text-slate-800 dark:text-white mb-4 tracking-tight">Welcome to GemDeck</h2>
+            <p class="text-slate-500 dark:text-slate-400 mb-10 max-w-md leading-relaxed text-sm">
+              Your personal command center for Gemini Custom Gems. It looks like your deck is empty. Let's get started:
+            </p>
+
+            <div class="w-full space-y-4 text-left max-w-sm">
+              <div class="flex items-start gap-4 p-4 rounded-xl bg-slate-50 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-800 transition-all hover:scale-[1.02]">
+                <div class="w-6 h-6 rounded-full bg-indigo-100 dark:bg-indigo-900/50 text-indigo-600 dark:text-indigo-400 flex items-center justify-center text-xs font-bold shrink-0 mt-0.5">1</div>
+                <div>
+                  <h4 class="text-sm font-bold text-slate-800 dark:text-slate-200">Invoke Your Gems</h4>
+                  <p class="text-[11px] text-slate-500 dark:text-slate-400 mt-1">Click the "Add Gem" button at the top right to register your favorite custom experts.</p>
+                </div>
+              </div>
+
+              <div class="flex items-start gap-4 p-4 rounded-xl bg-slate-50 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-800 transition-all hover:scale-[1.02]">
+                <div class="w-6 h-6 rounded-full bg-purple-100 dark:bg-purple-900/50 text-purple-600 dark:text-purple-400 flex items-center justify-center text-xs font-bold shrink-0 mt-0.5">2</div>
+                <div>
+                  <h4 class="text-sm font-bold text-slate-800 dark:text-slate-200">Copy URL from Gemini</h4>
+                  <p class="text-[11px] text-slate-500 dark:text-slate-400 mt-1">Visit your Gem and copy the address bar URL — it's better than share links!</p>
+                </div>
+              </div>
+
+              <div class="flex items-start gap-4 p-4 rounded-xl bg-slate-50 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-800 transition-all hover:scale-[1.02]">
+                <div class="w-6 h-6 rounded-full bg-pink-100 dark:bg-pink-900/50 text-pink-600 dark:text-pink-400 flex items-center justify-center text-xs font-bold shrink-0 mt-0.5">3</div>
+                <div>
+                  <h4 class="text-sm font-bold text-slate-800 dark:text-slate-200">Pin Your Favorites</h4>
+                  <p class="text-[11px] text-slate-500 dark:text-slate-400 mt-1">Use the Pin button to keep your most-used specialists at the top of your deck.</p>
+                </div>
+              </div>
+            </div>
+
+            <button 
+              @click="openAddModal"
+              class="mt-12 px-8 py-3 bg-indigo-600 hover:bg-indigo-500 text-white font-bold rounded-xl shadow-lg shadow-indigo-600/20 active:scale-95 transition-all text-sm flex items-center gap-2"
+            >
+              <Plus class="w-4 h-4" />
+              Create Your First Gem
+            </button>
+          </div>
+        </div>
       </div>
     </main>
   </div>
