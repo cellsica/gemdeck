@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
 import { useGemStore, type Gem } from '../stores/gemStore'
 import { ExternalLink, Pencil, Pin, PinOff } from 'lucide-vue-next'
 
@@ -12,6 +12,7 @@ const emit = defineEmits<{
 }>()
 
 const gemStore = useGemStore()
+const isIconHovered = ref(false)
 
 const handleOpenGem = () => {
   gemStore.touchGem(props.gem.id)
@@ -60,10 +61,11 @@ const aiServiceName = computed(() => {
     <div class="h-1.5 w-full bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500"></div>
     
     <!-- 背景のゴーストアイコン演出 -->
-    <div v-if="displayIconUrl" class="absolute top-0 right-0 w-2/3 h-full pointer-events-none opacity-0 group-hover/icon:opacity-10 dark:group-hover/icon:opacity-20 transition-all duration-700 ease-out z-0 overflow-hidden">
+    <div v-if="displayIconUrl" :class="['absolute top-0 right-0 w-2/3 h-full pointer-events-none transition-all duration-1000 ease-out z-0 overflow-hidden', isIconHovered ? 'opacity-20 translate-x-0' : 'opacity-0 translate-x-4']">
       <img 
         :src="displayIconUrl" 
-        class="absolute -right-4 top-1/2 -translate-y-1/2 w-48 h-48 object-cover rounded-full blur-sm [mask-image:linear-gradient(to_left,black,transparent)]" 
+        class="absolute -right-8 top-1/2 -translate-y-1/2 w-64 h-64 object-cover rounded-full blur-xl opacity-50"
+        style="-webkit-mask-image: linear-gradient(to left, black, transparent); mask-image: linear-gradient(to left, black, transparent);"
         alt=""
       />
     </div>
@@ -85,7 +87,12 @@ const aiServiceName = computed(() => {
 
       <div class="flex items-start gap-4 mb-4">
         <!-- アイコン部分 (クリックで開く) -->
-        <button @click="handleOpenGem" class="shrink-0 group/icon relative overflow-hidden rounded-full">
+        <button 
+          @click="handleOpenGem" 
+          @mouseenter="isIconHovered = true"
+          @mouseleave="isIconHovered = false"
+          class="shrink-0 group/icon relative overflow-hidden rounded-full"
+        >
           <img v-if="displayIconUrl" :src="displayIconUrl" :alt="gem.name" class="w-16 h-16 rounded-full object-cover border-2 border-slate-100 dark:border-slate-700 group-hover/icon:brightness-50 transition-all duration-300 transform group-hover/icon:scale-110" />
           <div v-else :class="['w-16 h-16 rounded-full flex items-center justify-center text-white text-2xl font-bold shadow-inner group-hover/icon:brightness-50 transition-all duration-300 transform group-hover/icon:scale-110', bgColor]">
             {{ firstLetter }}
