@@ -130,7 +130,7 @@ const handleReset = () => {
           <div class="text-center">
             <div class="inline-flex items-center gap-1.5 px-3 py-1 bg-slate-100 dark:bg-slate-800 rounded-full text-[10px] font-bold text-slate-500 dark:text-slate-400 mb-2">
               <span class="w-1.5 h-1.5 bg-indigo-500 rounded-full animate-pulse"></span>
-              GemDeck v1.1.0
+              GemDeck v1.1.1
             </div>
             
             <div class="mt-1 mb-3">
