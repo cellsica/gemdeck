@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { useGemStore } from '../stores/gemStore'
-import { X, Download, Upload, ShieldCheck, AlertCircle, Trash2 } from 'lucide-vue-next'
+import { X, Download, Upload, ShieldCheck, AlertCircle, Trash2, ExternalLink } from 'lucide-vue-next'
 
 const props = defineProps<{
   isOpen: boolean
@@ -130,8 +130,21 @@ const handleReset = () => {
           <div class="text-center">
             <div class="inline-flex items-center gap-1.5 px-3 py-1 bg-slate-100 dark:bg-slate-800 rounded-full text-[10px] font-bold text-slate-500 dark:text-slate-400 mb-2">
               <span class="w-1.5 h-1.5 bg-indigo-500 rounded-full animate-pulse"></span>
-              GemDeck v1.0.0
+              GemDeck v1.1.0
             </div>
+            
+            <div class="mt-1 mb-3">
+              <a 
+                href="https://github.com/cellsica/gemdeck/blob/main/releasenote.md" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                class="text-[10px] font-bold text-indigo-500 hover:text-indigo-600 dark:text-indigo-400 dark:hover:text-indigo-300 transition-colors inline-flex items-center gap-1"
+              >
+                Release Notes
+                <ExternalLink class="w-2.5 h-2.5" />
+              </a>
+            </div>
+
             <div class="text-[10px] text-slate-400 font-medium">
               &copy; 2026 Cellsica. All rights reserved.<br>
               <span class="opacity-50 mt-1 block tracking-tight">Created with ❤️ for the Gemini Community</span>
