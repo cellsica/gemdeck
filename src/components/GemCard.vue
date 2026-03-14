@@ -61,11 +61,11 @@ const aiServiceName = computed(() => {
     <div class="h-1.5 w-full bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500"></div>
     
     <!-- 背景のゴーストアイコン演出 -->
-    <div v-if="displayIconUrl" :class="['absolute top-0 right-0 w-full h-full pointer-events-none transition-all duration-700 ease-out z-0 overflow-hidden', isIconHovered ? 'opacity-30' : 'opacity-0']">
+    <div v-if="displayIconUrl" :class="['absolute top-0 right-0 w-full h-full pointer-events-none transition-all duration-700 ease-out z-0 overflow-hidden', isIconHovered ? 'opacity-20' : 'opacity-0']">
       <img 
         :src="displayIconUrl" 
-        class="absolute -right-4 top-1/2 -translate-y-1/2 w-40 h-40 object-cover rounded-xl blur-[2px]"
-        style="-webkit-mask-image: radial-gradient(circle at center, black, transparent); mask-image: radial-gradient(circle at center, black, transparent);"
+        class="absolute -right-6 top-1/2 -translate-y-1/2 w-56 h-56 object-cover rounded-2xl"
+        style="-webkit-mask-image: linear-gradient(to right, transparent, black 50%); mask-image: linear-gradient(to right, transparent, black 50%);"
         alt=""
       />
     </div>
