@@ -19,6 +19,7 @@ export const useGemStore = defineStore('gem', () => {
   const gems = useStorage<Gem[]>('gem-deck-data', [])
 
   const sortBy = ref<SortBy>('name')
+  const viewMode = useStorage<'card' | 'list'>('gem-deck-view-mode', 'card')
 
   const sortedGems = computed(() => {
     const list = [...gems.value]
@@ -111,6 +112,7 @@ export const useGemStore = defineStore('gem', () => {
     togglePin,
     exportGems,
     importGems,
-    clearAllGems
+    clearAllGems,
+    viewMode
   }
 })

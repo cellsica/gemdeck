@@ -2,9 +2,11 @@
 import { ref, onMounted } from 'vue'
 import { useGemStore, type Gem } from './stores/gemStore'
 import GemCard from './components/GemCard.vue'
+import GemListRow from './components/GemListRow.vue'
 import GemEditModal from './components/GemEditModal.vue'
 import SettingsModal from './components/SettingsModal.vue'
 import { Plus, Settings2, ArrowUpDown, Sparkles } from 'lucide-vue-next'
+import AiStatusIndicator from './components/AiStatusIndicator.vue'
 
 const gemStore = useGemStore()
 const isModalOpen = ref(false)
@@ -111,9 +113,14 @@ const toggleSort = () => {
           <div class="w-8 h-8 bg-indigo-600 rounded-lg flex items-center justify-center text-white font-black text-xl shadow-lg shadow-indigo-500/30 text-[18px]">
             G
           </div>
-          <div>
-            <h1 class="text-xl font-bold tracking-tight leading-none">GemDeck</h1>
-            <span class="text-[9px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-tighter">Powered by Cellsica</span>
+          <div class="flex items-center">
+            <div>
+              <h1 class="text-xl font-bold tracking-tight leading-none">GemDeck</h1>
+              <span class="text-[8px] sm:text-[9px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-tighter block mt-0.5">Powered by Cellsica</span>
+            </div>
+            
+            <!-- AI Status Indicator -->
+            <AiStatusIndicator class="flex" />
           </div>
         </div>
         
@@ -163,13 +170,26 @@ const toggleSort = () => {
     <!-- メインコンテンツ -->
     <main class="max-w-7xl mx-auto px-4 py-8">
       <!-- Gemが存在する場合 -->
-      <div v-if="gemStore.sortedGems.length > 0" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 animate-in fade-in slide-in-from-bottom-4 duration-700">
-        <GemCard 
-          v-for="gem in gemStore.sortedGems" 
-          :key="gem.id" 
-          :gem="gem" 
-          @edit="openEditModal"
-        />
+      <div v-if="gemStore.sortedGems.length > 0">
+        <!-- カードビュー -->
+        <div v-if="gemStore.viewMode === 'card'" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 animate-in fade-in slide-in-from-bottom-4 duration-700">
+          <GemCard 
+            v-for="gem in gemStore.sortedGems" 
+            :key="gem.id" 
+            :gem="gem" 
+            @edit="openEditModal"
+          />
+        </div>
+        
+        <!-- リストビュー -->
+        <div v-else class="max-w-3xl mx-auto space-y-3 animate-in fade-in slide-in-from-bottom-4 duration-700">
+          <GemListRow 
+            v-for="gem in gemStore.sortedGems" 
+            :key="gem.id" 
+            :gem="gem" 
+            @edit="openEditModal"
+          />
+        </div>
       </div>
 
       <!-- Gemが1つもない場合（チュートリアル表示） -->

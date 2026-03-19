@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { useGemStore } from '../stores/gemStore'
-import { X, Download, Upload, ShieldCheck, AlertCircle, Trash2, ExternalLink } from 'lucide-vue-next'
+import { X, Download, Upload, ShieldCheck, AlertCircle, Trash2, ExternalLink, LayoutGrid, List } from 'lucide-vue-next'
 
 const props = defineProps<{
   isOpen: boolean
@@ -76,6 +76,32 @@ const handleReset = () => {
       </div>
 
       <div class="p-6 space-y-8">
+        <!-- 表示モード設定 -->
+        <section>
+          <h3 class="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-4">Display Layout</h3>
+          <div class="flex p-1 bg-slate-100 dark:bg-slate-800 rounded-xl">
+            <button 
+              @click="gemStore.viewMode = 'card'"
+              class="flex-1 flex items-center justify-center gap-2 py-2.5 rounded-lg text-xs font-bold transition-all"
+              :class="gemStore.viewMode === 'card' ? 'bg-white dark:bg-slate-700 text-indigo-600 dark:text-indigo-400 shadow-sm' : 'text-slate-500 hover:text-slate-700 dark:hover:text-slate-300'"
+            >
+              <LayoutGrid class="w-4 h-4" />
+              Card View
+            </button>
+            <button 
+              @click="gemStore.viewMode = 'list'"
+              class="flex-1 flex items-center justify-center gap-2 py-2.5 rounded-lg text-xs font-bold transition-all"
+              :class="gemStore.viewMode === 'list' ? 'bg-white dark:bg-slate-700 text-indigo-600 dark:text-indigo-400 shadow-sm' : 'text-slate-500 hover:text-slate-700 dark:hover:text-slate-300'"
+            >
+              <List class="w-4 h-4" />
+              List View
+            </button>
+          </div>
+          <p class="text-[10px] text-slate-400 mt-3 px-1">
+            デバイスごとに表示形式を切り替えられます。スマホではリスト表示がおすすめ！
+          </p>
+        </section>
+
         <!-- バックアップ/復元 -->
         <section>
           <h3 class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-4">Data Management</h3>
@@ -130,7 +156,7 @@ const handleReset = () => {
           <div class="text-center">
             <div class="inline-flex items-center gap-1.5 px-3 py-1 bg-slate-100 dark:bg-slate-800 rounded-full text-[10px] font-bold text-slate-500 dark:text-slate-400 mb-2">
               <span class="w-1.5 h-1.5 bg-indigo-500 rounded-full animate-pulse"></span>
-              GemDeck v1.1.1
+              GemDeck v1.2.0
             </div>
             
             <div class="mt-1 mb-3">
